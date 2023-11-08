@@ -3,8 +3,6 @@ use viessmann_sdk::*;
 use viessmann_sdk::viessmann_client::UserInfo;
 
 fn main() {
-    println!("Viessmann API client \n");
-
     let args: Vec<String> = env::args().collect();
 
     let token = match env::var_os("VIESSMANN_TOKEN") {
@@ -15,10 +13,11 @@ fn main() {
     let action: &str = &args[1];
 
     match action {
-        "info" => {
+        "--help" => print_help(),
+        "--info" => {
             print_info(token.as_str())
         },
-        "refresh_token" => {
+        "--refresh_token" => {
             if args.len() > 3 {
                 let client_id: &str = &args[2];
                 let refresh_token: &str = &args[3];
@@ -27,10 +26,16 @@ fn main() {
                 println!("Provide the client id and the refresh token in order to refresh your token")
             }
         },
-        _ => println!("Unknown action")
+        _ => print_help()
     }
 
 
+}
+
+fn print_help() {
+    println!("Usage: viessmann-sdk <action>\n");
+    println!("--info");
+    println!("--refresh_token");
 }
 
 fn refresh_viessmann_token(client_id: &str, refresh_token: &str) {
