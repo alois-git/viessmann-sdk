@@ -6,13 +6,14 @@ use reqwest::blocking::Client;
 pub struct UserInfo {
     #[serde(alias = "loginId")]
     pub login_id: String,
-    id: String,
+    pub id: String,
 }
 
 #[derive(Deserialize, Debug)]
 pub struct Token {
     pub access_token: String,
-    expires_in: i32,
+    pub refresh_token: String,
+    pub expires_in: i32,
 }
 
 #[derive(Deserialize, Debug)]
@@ -190,7 +191,7 @@ pub fn get_gateways(token: &str) -> Result<Gateways, String> {
     }
 }
 
-pub fn get_devices(token: &str, installation_id: i32, gateway_serial: &str) -> Result<Devices, String> {
+pub fn get_devices(token: &str, installation_id: i32, gateway_serial: i64) -> Result<Devices, String> {
     let client = Client::new();
 
     let url = format!("https://api.viessmann.com/iot/v1/equipment/installations/{installationId}/gateways/{gatewaySerial}/devices",
